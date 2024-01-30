@@ -25,7 +25,7 @@ npx hardhat run scripts/check-balance.js --network mumbai
 ## To add source code and verify:
 
 ```
-npx hardhat verify --network mumbai CONTRACT_ADDRESS
+npx hardhat verify --network polygon CONTRACT_ADDRESS constructor_arg1 arg2 arg3
 ```
 
 List of supported Etherscan networks that hardhat is able to verify for you:

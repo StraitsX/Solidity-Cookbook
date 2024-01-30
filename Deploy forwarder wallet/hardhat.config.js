@@ -32,5 +32,11 @@ module.exports = {
             polygon: "FG4F4RGNSRI24JFAWSTYK5DDK1JT9FABSM", // victor's polygonscan api key
 
         }
-    }
+    },
+    // enable sourcify verification 
+    sourcify: {
+        // Disabled by default
+        // Doesn't need an API key
+        enabled: true
+      }
 };
