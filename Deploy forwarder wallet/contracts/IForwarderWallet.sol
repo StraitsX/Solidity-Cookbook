@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 interface IForwarderWallet {
     
-    /// Sweep ERC20 tokens from this smart contract wallet to a hardcoded destination wallet
+    /// Sweep ERC20 tokens from this smart contract wallet to a hardcoded master wallet
     /// @param erc20Amount the amount of erc20 tokens to sweep funds out of the smart contract
     function sweepFunds(uint256 erc20Amount) external;
 
