@@ -4,9 +4,7 @@ dotenv.config({path: __dirname + '/.env'});
 const { API_URL, MNEMONIC } = process.env;
 
 var mnemonic = MNEMONIC;
-
-// mumbai testnet from victor.liew@fazzfinancial alchemy acct
-var api_url = API_URL || ""
+var api_url = API_URL;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
