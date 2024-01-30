@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  deployment-playground:
+    build:
+      context: .
+    volumes:
+      - ./:/deployment-playground
+    depends_on:
+      - ganache
+
+  ganache:
+    image: trufflesuite/ganache:v7.7.7
+    ports:
+      - "7545:7545"
+    volumes:
+      - ./tmp/ganache_data:/ganache_data
+    command:
+      - --port=7545
+      - --db=/ganache_data
+      - --mnemonic
+      - 'diesel sunset host claim much rack hurdle want obscure slab auto member'
+      - --networkId
+      - '5777'

@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "description": "A proxy smart contract is a type of smart contract that allows for the upgradeability of other contracts in the Ethereum ecosystem. With a proxy smart contract, developers can change the behavior of a contract without having to redeploy it or migrate its data to a new contract.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.0.0",
+    "solc": "^0.8.19"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.13.1"
+  }
+}
