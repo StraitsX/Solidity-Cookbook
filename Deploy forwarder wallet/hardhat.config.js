@@ -12,6 +12,9 @@ module.exports = {
     defaultNetwork: "hardhat",  // change this to mumbai network when ready to deploy to polygon mumbai
     networks: {
         hardhat: {
+            forking: {
+                url: API_URL
+            }
         },
         polygon: {
             url: api_url,
