@@ -16,6 +16,11 @@ describe("Forwarder Wallet Test", function () {
         await xsgdToken.waitForDeployment();
         expect(await xsgdToken.decimals()).to.equal(6);
 
+        // usdc
+        usdcToken = await ethers.deployContract("Spot", ["USDC", "USDC", 6], {});
+        await usdcToken.waitForDeployment();
+        expect(await usdcToken.decimals()).to.equal(6);
+
         // deploy wallet
         [owner, strangerTom, strangerStef, masterWallet] = await ethers.getSigners();
         fWallet = await ethers.deployContract("ForwarderWallet", [owner, masterWallet, xsgdToken.target], {});
@@ -66,6 +71,20 @@ describe("Forwarder Wallet Test", function () {
         await fWallet.connect(strangerTom).sweepFunds(10);
         expect(await xsgdToken.balanceOf(fWallet.target)).to.equal(80);
         expect(await xsgdToken.balanceOf(masterWallet)).to.equal(20);
+    });
+
+    it("Rescue funds that are stucked in this contract ", async function () {
+
+        // Mint and rescue test
+        expect(await usdcToken.balanceOf(fWallet.target)).to.equal(0);
+        await usdcToken.mint(fWallet.target, 100);
+        // wallet now have 100 usdc tokens
+        expect(await usdcToken.balanceOf(fWallet.target)).to.equal(100);
+        // attempt to rescue funds
+        await fWallet.adminRescueFunds(usdcToken.target, 90, strangerTom);
+        
+        expect(await usdcToken.balanceOf(strangerTom)).to.equal(90);
+        expect(await usdcToken.balanceOf(fWallet.target)).to.equal(10);
     });
 
 });
