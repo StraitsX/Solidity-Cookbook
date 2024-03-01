@@ -33,7 +33,12 @@ describe("Forwarder Wallet Test", function () {
     });
     
     it("Admin sweep funds permission test ", async function () {
-        await fWallet.adminSweepFunds(0, strangerStef);
+        // attempt to sweep funds but with no balance
+        await expect(fWallet.adminSweepFunds(10, strangerStef))
+        .to.be.reverted;
+        // give some xsgd
+        await xsgdToken.mint(fWallet.target, 100);
+        await expect(fWallet.adminSweepFunds(10, strangerStef)).not.to.be.reverted;
         await expect(fWallet.connect(strangerTom).adminSweepFunds(100, strangerStef))
         .to.be.revertedWithCustomError(fWallet, 'OwnableUnauthorizedAccount');
     });
@@ -44,7 +49,6 @@ describe("Forwarder Wallet Test", function () {
         expect(await xsgdToken.balanceOf(fWallet.target)).to.equal(0);
         await xsgdToken.mint(fWallet.target, 100)
         expect(await xsgdToken.balanceOf(fWallet.target)).to.equal(100);
-
 
         await fWallet.adminSweepFunds(10, strangerStef);
         expect(await xsgdToken.balanceOf(fWallet.target)).to.equal(90);
@@ -71,6 +75,16 @@ describe("Forwarder Wallet Test", function () {
         await fWallet.connect(strangerTom).sweepFunds(10);
         expect(await xsgdToken.balanceOf(fWallet.target)).to.equal(80);
         expect(await xsgdToken.balanceOf(masterWallet)).to.equal(20);
+    });
+
+    it("Rescue funds permission test ", async function () {
+        // give some usdc
+        await usdcToken.mint(fWallet.target, 100); 
+        // attempt to rescue funds
+        await expect(fWallet.adminRescueFunds(usdcToken.target, 1, strangerStef)).not.to.be.reverted; 
+        // try non admin rescue funds
+        await expect(fWallet.connect(strangerTom).adminRescueFunds(usdcToken.target, 1, strangerStef)) 
+        .to.be.revertedWithCustomError(fWallet, 'OwnableUnauthorizedAccount');
     });
 
     it("Rescue funds that are stucked in this contract ", async function () {
