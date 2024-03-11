@@ -8,6 +8,7 @@ You can target any network from your Hardhat config using:
 ```
 npx hardhat run --network <network-name> scripts/deploy.js
 npx hardhat run --network polygon scripts/deploy.js
+npx hardhat run --network holesky scripts/deploy.js
 ```
 
 ## Testing

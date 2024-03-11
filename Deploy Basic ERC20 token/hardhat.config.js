@@ -1,7 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
 const dotenv = require("dotenv");
 dotenv.config({path: __dirname + '/.env'});
-const { API_URL, MNEMONIC } = process.env;
+const { API_URL, MNEMONIC, AVAX_MNEMONIC } = process.env;
 
 
 /** @type import('hardhat/config').HardhatUserConfig */
@@ -22,7 +22,21 @@ module.exports = {
         passphrase: "",
       },
 
+    },
+    avaxtest: {
+      url: "https://subnets.avax.network/projectorc/testnet/rpc",
+
+      accounts: {
+        mnemonic: AVAX_MNEMONIC,
+        path: "m/44'/60'/0'/0",
+        initialIndex: 0,
+        count: 20,
+        passphrase: "",
+      },
+
     }
+
+
   },
 
   // for verifying source code contract

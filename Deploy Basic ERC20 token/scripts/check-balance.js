@@ -4,7 +4,7 @@ async function main() {
   const [signer] = await hre.ethers.getSigners();
 
   const balance = await signer.getBalance();
-  console.log(`Balance: ${hre.ethers.utils.formatEther(balance)} MATIC`);
+  console.log(`Balance: ${hre.ethers.utils.formatEther(balance)} Tokens`);
 
   const signerAddress = await signer.getAddress();
   console.log(`Signer Address: ${signerAddress}`);
