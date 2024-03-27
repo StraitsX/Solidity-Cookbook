@@ -6,8 +6,8 @@ import "./interfaces/ITeleporterMessenger.sol";
 import "./interfaces/ITeleporterReceiver.sol";
 
 contract DispatchReceiver is ITeleporterReceiver {
-
-    ITeleporterMessenger public immutable teleporterMessenger = ITeleporterMessenger(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
+    ITeleporterMessenger public immutable teleporterMessenger =
+        ITeleporterMessenger(0x253b2784c75e510dD0fF1da844684a1aC0aa5fcf);
 
     string public lastMessage;
 
