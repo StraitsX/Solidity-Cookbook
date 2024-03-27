@@ -11,10 +11,7 @@ module.exports = {
   solidity: {
     compilers: [
       {
-        version: "0.4.24",
-      },
-      {
-        version: "0.6.12",
+        version: "0.8.18",
         settings: {
           optimizer: {
             enabled: true,
@@ -99,6 +96,28 @@ module.exports = {
       deploy: ["deploy/"],
       tags: ["orcSubnet"],
     },
+    fuji: {
+      accounts: [
+        Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC).privateKey,
+        Wallet.fromMnemonic(process.env.ADMIN_MNEMONIC).privateKey,
+      ],
+      url: process.env.FUJI_C_CHAIN_NODE_HTTP_URL,
+      network_id: 43113,
+      saveDeployments: true,
+      deploy: ["deploy/"],
+      tags: ["fujiC"],
+    },
+    dispatch: {
+      accounts: [
+        Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC).privateKey,
+        Wallet.fromMnemonic(process.env.ADMIN_MNEMONIC).privateKey,
+      ],
+      url: process.env.DISPATCH_TEST_NODE_HTTP_URL,
+      network_id: 779672,
+      saveDeployments: true,
+      deploy: ["deploy/"],
+      tags: ["dispatchTest"],
+    },
   },
   gasReporter: {
     enabled: true,
@@ -114,6 +133,8 @@ module.exports = {
       sepolia: process.env.SEPOLIA_SCAN_API_KEY,
       ethereum: process.env.ETHER_SCAN_API_KEY,
       holesky: process.env.ETHER_SCAN_API_KEY,
+      fuji: "fuji",
+      dispatch: "dispatch"
     },
     customChains: [
       {
@@ -154,6 +175,22 @@ module.exports = {
         urls: {
           apiURL: "https://api-holesky.etherscan.io/api",
           browserURL: "https://holesky.etherscan.io/",
+        },
+      },
+      {
+        network: "fuji",
+        chainId: 43113,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan",
+          browserURL: "https://c-chain.snowtrace.io",
+        },
+      },
+      {
+        network: "dispatch",
+        chainId: 779672,
+        urls: {
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/779672/etherscan",
+          browserURL: "https://779672.testnet.routescan.io",
         },
       },
     ],
