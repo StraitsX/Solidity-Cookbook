@@ -20,7 +20,7 @@ contract CChainSender {
                     feeTokenAddress: address(0),
                     amount: 0
                 }),
-                requiredGasLimit: 100000,
+                requiredGasLimit: 3000000,
                 allowedRelayerAddresses: new address[](0),
                 message: abi.encode(message)
             })

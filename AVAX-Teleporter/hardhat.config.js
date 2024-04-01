@@ -105,7 +105,7 @@ module.exports = {
       network_id: 43113,
       saveDeployments: true,
       deploy: ["deploy/"],
-      tags: ["fujiC"],
+      tags: ["fuji"],
     },
     dispatch: {
       accounts: [
@@ -116,7 +116,18 @@ module.exports = {
       network_id: 779672,
       saveDeployments: true,
       deploy: ["deploy/"],
-      tags: ["dispatchTest"],
+      tags: ["dispatch"],
+    },
+    echo: {
+      accounts: [
+        Wallet.fromMnemonic(process.env.DEPLOYER_MNEMONIC).privateKey,
+        Wallet.fromMnemonic(process.env.ADMIN_MNEMONIC).privateKey,
+      ],
+      url: process.env.ECHO_NODE_HTTP_URL,
+      network_id: 173750,
+      saveDeployments: true,
+      deploy: ["deploy/"],
+      tags: ["echo"],
     },
   },
   gasReporter: {
@@ -135,6 +146,7 @@ module.exports = {
       holesky: process.env.ETHER_SCAN_API_KEY,
       fuji: "fuji",
       dispatch: "dispatch",
+      echo: "echo",
     },
     customChains: [
       {
@@ -193,6 +205,15 @@ module.exports = {
           apiURL:
             "https://api.routescan.io/v2/network/testnet/evm/779672/etherscan",
           browserURL: "https://779672.testnet.routescan.io",
+        },
+      },
+      {
+        network: "echo",
+        chainId: 173750,
+        urls: {
+          apiURL:
+            "https://api.routescan.io/v2/network/testnet/evm/173750/etherscan",
+          browserURL: "https://173750.testnet.routescan.io",
         },
       },
     ],

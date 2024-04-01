@@ -4,13 +4,13 @@ async function main() {
   const { deployer } = await getNamedAccounts();
   const CChainSender = await ethers.getContractFactory("CChainSender");
   const cChainSender = CChainSender.attach(
-    "0x124eDB77c52c7fb707AeeF7695342D5B3f999d55"
+    "0x5201D8EF22bA3090eA3329d57F082801783A8558"
   ).connect(await ethers.provider.getSigner(deployer));
 
   console.log("Sending message to DispatchReceiver from Fuji to dispatch");
   const sendToDispatchTxn = await cChainSender.sendMessage(
-    "0x124eDB77c52c7fb707AeeF7695342D5B3f999d55",
-    "this is from fuji c chain"
+    "0x63681558c1b680E43bbCAdC0CeD21075854bBA87", // destination contract address
+    "chaining message" // message
   );
   await sendToDispatchTxn.wait();
   console.log("done");
