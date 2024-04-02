@@ -20,3 +20,4 @@ node_modules
 /coverage.json
 
 gas-report.txt
+../.gitmodules
