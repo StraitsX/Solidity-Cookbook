@@ -7,10 +7,10 @@ pragma solidity 0.8.18;
 
 import { TeleporterTokenDestination } from "./TeleporterTokenDestination.sol";
 import { IERC20Bridge } from "../interfaces/IERC20Bridge.sol";
-import { SafeERC20TransferFrom } from "../lib/teleporter/contracts/src/Teleporter/SafeERC20TransferFrom.sol";
-import { IERC20, ERC20 } from "../lib/teleporter/contracts/lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
-import { SafeERC20 } from "../lib/teleporter/contracts/lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
-import { SendTokensInput } from "./interfaces/ITeleporterTokenBridge.sol";
+import { SafeERC20TransferFrom } from "../../lib/Teleporter/SafeERC20TransferFrom.sol";
+import { IERC20, ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { SendTokensInput } from "../interfaces/ITeleporterTokenBridge.sol";
 
 /**
  * @title ERC20Destination

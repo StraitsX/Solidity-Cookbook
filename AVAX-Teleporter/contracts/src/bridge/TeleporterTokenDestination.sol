@@ -5,10 +5,10 @@
 
 pragma solidity 0.8.18;
 
-import { TeleporterMessageInput, TeleporterFeeInfo } from "../lib/teleporter/contracts/src/Teleporter/ITeleporterMessenger.sol";
-import { TeleporterOwnerUpgradeable } from "../lib/teleporter/contracts/src/Teleporter/upgrades/TeleporterOwnerUpgradeable.sol";
+import { TeleporterMessageInput, TeleporterFeeInfo } from "../../lib/Teleporter/ITeleporterMessenger.sol";
+import { TeleporterOwnerUpgradeable } from "../../lib/Teleporter/upgrades/TeleporterOwnerUpgradeable.sol";
 import { ITeleporterTokenBridge, SendTokensInput } from "../interfaces/ITeleporterTokenBridge.sol";
-import { IWarpMessenger } from "../lib/teleporter/contracts/lib/subnet-evm/contracts/contracts/interfaces/IWarpMessenger.sol";
+import { IWarpMessenger } from "../../lib/IWarpMessenger.sol";
 
 /**
  * @title TeleporterTokenDestination

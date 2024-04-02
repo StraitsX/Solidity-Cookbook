@@ -5,7 +5,7 @@
 
 pragma solidity 0.8.18;
 
-import { ITeleporterReceiver } from "../lib/teleporter/contracts/src/Teleporter/ITeleporterReceiver.sol";
+import { ITeleporterReceiver } from "../../lib/Teleporter/ITeleporterReceiver.sol";
 
 /**
  * @notice Parameters for delivery of tokens to another chain and destination recipient.
