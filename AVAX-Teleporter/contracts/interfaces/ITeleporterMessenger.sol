@@ -71,10 +71,7 @@ interface ITeleporterMessenger {
      * @notice Emitted when an additional fee amount is added to a Teleporter message that had previously
      * been sent, but not yet delivered to the destination chain.
      */
-    event AddFeeAmount(
-        bytes32 indexed messageID,
-        TeleporterFeeInfo updatedFeeInfo
-    );
+    event AddFeeAmount(bytes32 indexed messageID, TeleporterFeeInfo updatedFeeInfo);
 
     /**
      * @notice Emitted when a Teleporter message is being delivered on the destination chain to an address,
@@ -93,10 +90,7 @@ interface ITeleporterMessenger {
      *
      * Each message received can be executed successfully at most once.
      */
-    event MessageExecuted(
-        bytes32 indexed messageID,
-        bytes32 indexed sourceBlockchainID
-    );
+    event MessageExecuted(bytes32 indexed messageID, bytes32 indexed sourceBlockchainID);
 
     /**
      * @notice Emitted when a TeleporterMessage is successfully received.
@@ -123,19 +117,13 @@ interface ITeleporterMessenger {
     /**
      * @notice Emitted when an account redeems accumulated relayer rewards.
      */
-    event RelayerRewardsRedeemed(
-        address indexed redeemer,
-        address indexed asset,
-        uint256 amount
-    );
+    event RelayerRewardsRedeemed(address indexed redeemer, address indexed asset, uint256 amount);
 
     /**
      * @notice Called by transactions to initiate the sending of a cross-chain message.
      * @return The message ID of the newly sent message.
      */
-    function sendCrossChainMessage(
-        TeleporterMessageInput calldata messageInput
-    ) external returns (bytes32);
+    function sendCrossChainMessage(TeleporterMessageInput calldata messageInput) external returns (bytes32);
 
     /**
      * @notice Called by transactions to retry the sending of a cross-chain message.
@@ -146,9 +134,7 @@ interface ITeleporterMessenger {
      * The message is checked to have already been previously submitted by comparing its message hash against those kept in
      * state until a receipt is received for the message.
      */
-    function retrySendCrossChainMessage(
-        TeleporterMessage calldata message
-    ) external;
+    function retrySendCrossChainMessage(TeleporterMessage calldata message) external;
 
     /**
      * @notice Adds the additional fee amount to the amount to be paid to the relayer that delivers
@@ -158,11 +144,7 @@ interface ITeleporterMessenger {
      * call to sendCrossChainMessage. Reverts if the message doesn't exist or there is already
      * receipt of delivery of the message.
      */
-    function addFeeAmount(
-        bytes32 messageID,
-        address feeTokenAddress,
-        uint256 additionalFeeAmount
-    ) external;
+    function addFeeAmount(bytes32 messageID, address feeTokenAddress, uint256 additionalFeeAmount) external;
 
     /**
      * @notice Receives a cross-chain message, and marks the `relayerRewardAddress` for fee reward for a successful delivery.
@@ -170,10 +152,7 @@ interface ITeleporterMessenger {
      * @dev The message specified by `messageIndex` must be provided at that index in the access list storage slots of the transaction,
      * and is verified in the precompile predicate.
      */
-    function receiveCrossChainMessage(
-        uint32 messageIndex,
-        address relayerRewardAddress
-    ) external;
+    function receiveCrossChainMessage(uint32 messageIndex, address relayerRewardAddress) external;
 
     /**
      * @notice Retries the execution of a previously delivered message by verifying the payload matches
@@ -184,10 +163,7 @@ interface ITeleporterMessenger {
      * execution, or if the destination address did not contain a contract, but a compatible contract
      * was later deployed to that address. Messages are ensured to be successfully executed at most once.
      */
-    function retryMessageExecution(
-        bytes32 sourceBlockchainID,
-        TeleporterMessage calldata message
-    ) external;
+    function retryMessageExecution(bytes32 sourceBlockchainID, TeleporterMessage calldata message) external;
 
     /**
      * @notice Sends the receipts for the given `messageIDs`.
@@ -226,27 +202,20 @@ interface ITeleporterMessenger {
      * for a given message, assuming that the message has already been delivered.
      * @return The relayer reward address for the given message.
      */
-    function getRelayerRewardAddress(
-        bytes32 messageID
-    ) external view returns (address);
+    function getRelayerRewardAddress(bytes32 messageID) external view returns (address);
 
     /**
      * @notice Gets the current reward amount of a given fee asset that is redeemable by the given relayer.
      * @return The amount of the fee asset redeemable by the specified relayer.
      */
-    function checkRelayerRewardAmount(
-        address relayer,
-        address feeTokenAddress
-    ) external view returns (uint256);
+    function checkRelayerRewardAmount(address relayer, address feeTokenAddress) external view returns (uint256);
 
     /**
      * @notice Gets the fee token address and amount for a given sent message.
      * @return The fee token address and fee amount for a the given sent message ID.
      * If the message ID is not found, zero address and amount values are returned.
      */
-    function getFeeInfo(
-        bytes32 messageID
-    ) external view returns (address, uint256);
+    function getFeeInfo(bytes32 messageID) external view returns (address, uint256);
 
     /**
      * @notice Gets the message ID that would currently be used for the next message sent from the contract
@@ -257,17 +226,13 @@ interface ITeleporterMessenger {
      * change with each successful call to sendCrossChainMessage.
      * @return The specified message ID.
      */
-    function getNextMessageID(
-        bytes32 destinationBlockchainID
-    ) external view returns (bytes32);
+    function getNextMessageID(bytes32 destinationBlockchainID) external view returns (bytes32);
 
     /**
      * @notice Gets the number of receipts that are waiting to be sent to the given source chain ID.
      * @return Size of the given queue.
      */
-    function getReceiptQueueSize(
-        bytes32 sourceBlockchainID
-    ) external view returns (uint256);
+    function getReceiptQueueSize(bytes32 sourceBlockchainID) external view returns (uint256);
 
     /**
      * @notice Gets the receipt at the given index in the queue for the given source chain ID.

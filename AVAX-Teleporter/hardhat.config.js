@@ -193,8 +193,7 @@ module.exports = {
         network: "fuji",
         chainId: 43113,
         urls: {
-          apiURL:
-            "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan",
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan",
           browserURL: "https://c-chain.snowtrace.io",
         },
       },
@@ -202,8 +201,7 @@ module.exports = {
         network: "dispatch",
         chainId: 779672,
         urls: {
-          apiURL:
-            "https://api.routescan.io/v2/network/testnet/evm/779672/etherscan",
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/779672/etherscan",
           browserURL: "https://779672.testnet.routescan.io",
         },
       },
@@ -211,8 +209,7 @@ module.exports = {
         network: "echo",
         chainId: 173750,
         urls: {
-          apiURL:
-            "https://api.routescan.io/v2/network/testnet/evm/173750/etherscan",
+          apiURL: "https://api.routescan.io/v2/network/testnet/evm/173750/etherscan",
           browserURL: "https://173750.testnet.routescan.io",
         },
       },

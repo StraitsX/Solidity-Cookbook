@@ -3,9 +3,9 @@ const { ethers, getNamedAccounts, deployments } = require("hardhat");
 async function main() {
   const { deployer } = await getNamedAccounts();
   const CChainSender = await ethers.getContractFactory("CChainSender");
-  const cChainSender = CChainSender.attach(
-    "0x5201D8EF22bA3090eA3329d57F082801783A8558"
-  ).connect(await ethers.provider.getSigner(deployer));
+  const cChainSender = CChainSender.attach("0x5201D8EF22bA3090eA3329d57F082801783A8558").connect(
+    await ethers.provider.getSigner(deployer)
+  );
 
   console.log("Sending message to DispatchReceiver from Fuji to dispatch");
   const sendToDispatchTxn = await cChainSender.sendMessage(

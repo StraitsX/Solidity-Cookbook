@@ -10,10 +10,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
 
-  console.log(
-    "DispatchReceiver deployed to:",
-    dispatchReceiverDeployment.address
-  );
+  console.log("DispatchReceiver deployed to:", dispatchReceiverDeployment.address);
 };
 
 module.exports.tags = ["DispatchReceiver"];
