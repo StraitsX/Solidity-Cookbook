@@ -1,0 +1,22 @@
+.direnv/
+
+node_modules
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# Hardhat deploy plugin. 
+# Gets generated whenever `npx hardhat deploy` is run
+/deployments
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+gas-report.txt
