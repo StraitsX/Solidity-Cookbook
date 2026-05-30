@@ -2,8 +2,8 @@ const hre = require("hardhat");
 
 async function main() {
     let xsgdTokenAddress = "0xDC3326e71D45186F113a2F448984CA0e8D201995";
-    let masterWalletAddress = "0xcf801268E6b45101cd974d1038b8986EDffE3D9F";
-    let ownerAddress = "0xcf801268E6b45101cd974d1038b8986EDffE3D9F"
+    let masterWalletAddress = "0x141ecc080d64e5663c726c631b2fcf41be8ec189";
+    let ownerAddress = "0x768d95166eD5E1780d3631756446C44C77e1aF39"
     let [deployer] = await ethers.getSigners();
 
     // deploy wallet
