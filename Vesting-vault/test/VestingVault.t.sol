@@ -4,7 +4,6 @@ pragma solidity 0.8.36;
 import {Test} from "forge-std/Test.sol";
 import {VestingVault} from "../src/VestingVault.sol";
 import {MockERC20} from "./mocks/MockERC20.sol";
-import {MockERC20Foreign} from "./mocks/MockERC20Foreign.sol";
 import {MockFeeOnTransferERC20} from "./mocks/MockFeeOnTransferERC20.sol";
 
 contract VestingVaultTest is Test {
@@ -42,7 +41,7 @@ contract VestingVaultTest is Test {
     // ============ Construction / validation ============
 
     function test_constructor_revertsOnZeroTokenAddress() public {
-        vm.expectRevert(VestingVault.ZeroAddress.selector);
+        vm.expectRevert(VestingVault.ZeroTokenAddress.selector);
         new VestingVault(
             address(0),
             beneficiary,
@@ -54,7 +53,7 @@ contract VestingVaultTest is Test {
     }
 
     function test_constructor_revertsOnZeroBeneficiaryAddress() public {
-        vm.expectRevert(VestingVault.ZeroAddress.selector);
+        vm.expectRevert(VestingVault.ZeroBeneficiaryAddress.selector);
         new VestingVault(
             address(token),
             address(0),
@@ -457,7 +456,7 @@ contract VestingVaultTest is Test {
     // ============ Sweep ============
 
     function test_sweepForeignToken_success() public {
-        MockERC20Foreign foreign = new MockERC20Foreign("Foreign", "FRN");
+        MockERC20 foreign = new MockERC20("Foreign", "FRN");
         foreign.mint(address(vault), 500e18);
 
         vm.expectEmit(true, true, false, true);
@@ -481,13 +480,13 @@ contract VestingVaultTest is Test {
     }
 
     function test_sweepForeignToken_revertsOnZeroBalance() public {
-        MockERC20Foreign foreign = new MockERC20Foreign("Foreign", "FRN");
+        MockERC20 foreign = new MockERC20("Foreign", "FRN");
         vm.expectRevert(VestingVault.NothingToSweep.selector);
         vault.sweepForeignToken(address(foreign));
     }
 
     function test_sweepForeignToken_revertsForNonFunder() public {
-        MockERC20Foreign foreign = new MockERC20Foreign("Foreign", "FRN");
+        MockERC20 foreign = new MockERC20("Foreign", "FRN");
         foreign.mint(address(vault), 500e18);
         vm.prank(stranger);
         vm.expectRevert(VestingVault.NotFunder.selector);

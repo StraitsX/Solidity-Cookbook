@@ -11,21 +11,43 @@
 #   1. In one terminal:  anvil
 #   2. In another terminal, from the project root: ./step-by-step-demo.sh
 #
-# Everything below uses anvil's well-known default test accounts (private keys
-# that ship with anvil itself, printed to its console on startup). These are
-# NOT real funds and NOT secret — never reuse them on a real network.
+# Everything below uses anvil's pre-funded test accounts. The script does NOT
+# embed any private keys or mnemonics — you must supply them via environment
+# variables after reading them from anvil's startup output.
+#
+# Usage:
+#   1. In one terminal:  anvil
+#   2. Copy the private keys from anvil's output, then run:
+#      DEPLOYER_KEY=0x<account0_key> BENEFICIARY_KEY=0x<account1_key> ./step-by-step-demo.sh
+#
+# The accounts must already hold ETH on the target chain (anvil pre-funds its
+# default accounts with 10000 ETH each). These are NOT real funds and NOT
+# secret — never reuse them on a real network.
 # =============================================================================
 
 set -euo pipefail
 
 RPC_URL="http://localhost:8545"
 
-# anvil default account #0 — used as deployer / funder
-DEPLOYER_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+# Safety gate: prevent accidental execution against a real network.
+CHAIN_ID=$(cast chain-id --rpc-url "$RPC_URL" 2>/dev/null || echo "unknown")
+if [ "$CHAIN_ID" != "31337" ]; then
+  echo "ERROR: This script is for local Anvil only (chain_id=31337). Got: $CHAIN_ID" >&2
+  exit 1
+fi
+
+# Require keys from the environment — no embedded secrets.
+if [[ -z "${DEPLOYER_KEY:-}" || -z "${BENEFICIARY_KEY:-}" ]]; then
+  echo "ERROR: DEPLOYER_KEY and BENEFICIARY_KEY must be set." >&2
+  echo "" >&2
+  echo "Start anvil, then copy the private keys from its output:" >&2
+  echo "  DEPLOYER_KEY=0x<key0> BENEFICIARY_KEY=0x<key1> ./step-by-step-demo.sh" >&2
+  exit 1
+fi
+
 DEPLOYER_ADDR=$(cast wallet address --private-key "$DEPLOYER_KEY")
 
 # anvil default account #1 — used as beneficiary
-BENEFICIARY_KEY="0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
 BENEFICIARY_ADDR=$(cast wallet address --private-key "$BENEFICIARY_KEY")
 
 TOTAL_ALLOCATION="1000000000000000000000000"  # 1,000,000e18
@@ -140,7 +162,7 @@ set -e
 
 echo ""
 echo "--- Step 12: Demonstrate sweepForeignToken — simulate a stray transfer, then recover it ---"
-FOREIGN_ADDR=$(forge create test/mocks/MockERC20Foreign.sol:MockERC20Foreign \
+FOREIGN_ADDR=$(forge create test/mocks/MockERC20.sol:MockERC20 \
   --rpc-url "$RPC_URL" \
   --private-key "$DEPLOYER_KEY" \
   --broadcast \

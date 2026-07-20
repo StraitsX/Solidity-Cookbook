@@ -15,12 +15,24 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 ///      destination address — both always send to `funder` — so no code path in this
 ///      contract can redirect the vested token to anyone other than `beneficiary` (via
 ///      `claim`) or `funder` (via `sweepExcess`, and only for the strictly-excess portion).
+/// @dev SUPPORTED TOKENS: only standard, non-fee, non-rebasing ERC20s are supported. `fund`
+///      rejects fee-on-transfer / rebasing tokens at funding time via a balance-delta check
+///      (`FundingShortfall`), so a token that is fee-bearing *at deployment* can never fund
+///      this vault. The residual, unguarded case is an UPGRADEABLE token that funds cleanly
+///      and *later* enables a transfer fee or rebasing: from that point `claim`'s transfers
+///      may deliver less than the schedule credits, or deplete the vault balance before
+///      `claimed` reaches `totalAllocation`, permanently bricking `claim` with no on-chain
+///      recovery. This is a trust assumption on the chosen token, not a defense this
+///      single-token vault can soundly implement (`claimed` is anchored to the vesting-time
+///      curve, so a receive-side balance-delta in `claim` cannot faithfully track it). Do not
+///      deploy this vault for a token whose transfer semantics are mutable.
 contract VestingVault is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     // ============ Errors ============
 
-    error ZeroAddress();
+    error ZeroTokenAddress();
+    error ZeroBeneficiaryAddress();
     error ZeroAllocation();
     /// @dev Schedule shape is invalid: zero vesting duration, or cliff longer than vesting duration.
     error InvalidSchedule();
@@ -95,8 +107,8 @@ contract VestingVault is ReentrancyGuard {
         uint64 cliffDuration_,
         uint64 vestingDuration_
     ) {
-        if (token_ == address(0)) revert ZeroAddress();
-        if (beneficiary_ == address(0)) revert ZeroAddress();
+        if (token_ == address(0)) revert ZeroTokenAddress();
+        if (beneficiary_ == address(0)) revert ZeroBeneficiaryAddress();
         if (totalAllocation_ == 0) revert ZeroAllocation();
         if (vestingDuration_ == 0) revert InvalidSchedule();
         if (cliffDuration_ > vestingDuration_) revert InvalidSchedule();
@@ -157,7 +169,8 @@ contract VestingVault is ReentrancyGuard {
     /// @notice Returns the amount currently claimable (vested minus already claimed) as of now.
     /// @return The claimable amount at the current block timestamp.
     function claimableAmount() public view returns (uint256) {
-        return vestedAmount(uint64(block.timestamp)) - claimed;
+        uint256 vested = vestedAmount(uint64(block.timestamp));
+        return vested > claimed ? vested - claimed : 0;
     }
 
     /// @notice Claims all currently vested and unclaimed tokens, transferring them to the beneficiary.
@@ -166,7 +179,10 @@ contract VestingVault is ReentrancyGuard {
     ///      parameter by design — a structural anti-redirect measure, not a runtime check. If
     ///      `start` is far enough in the past that the schedule is already fully elapsed at
     ///      funding time, the first claim may transfer the full `totalAllocation` in one call;
-    ///      this is intended (see constructor NatSpec), not a bug.
+    ///      this is intended (see constructor NatSpec), not a bug. Assumes a standard non-fee,
+    ///      non-rebasing token: `claimed` is credited by the schedule-derived `amount`, not by a
+    ///      receive-side balance delta. See the contract-level SUPPORTED TOKENS note for why a
+    ///      token that turns fee-bearing post-deployment can brick this path.
     function claim() external nonReentrant {
         if (msg.sender != beneficiary) revert NotBeneficiary();
         if (!funded) revert NotFundedYet();
@@ -209,11 +225,20 @@ contract VestingVault is ReentrancyGuard {
     ///      simply hasn't claimed yet, `balance` equals `owed` exactly, so this reverts with
     ///      `NothingToSweep` rather than letting the funder claw back tokens the beneficiary is
     ///      legitimately entitled to. The comparison uses `<=` (not `<`) deliberately: exact
-    ///      equality between balance and owed means zero real excess.
+    ///      equality between balance and owed means zero real excess. Before funding, `owed` is
+    ///      treated as 0 (the vault owes the beneficiary nothing yet), so any vesting-token
+    ///      balance transferred in directly before `fund` is fully recoverable here instead of
+    ///      being permanently locked.
     function sweepExcess() external nonReentrant {
         if (msg.sender != funder) revert NotFunder();
 
-        uint256 owed = totalAllocation - claimed;
+        // `owed` (the amount still due to the beneficiary) only exists once the vault is
+        // funded. Before funding the vault owes the beneficiary nothing, so any vesting-token
+        // balance sitting here — e.g. tokens transferred in directly instead of via `fund` —
+        // is entirely excess and must be recoverable. Without the `funded` guard, `owed` would
+        // equal `totalAllocation`, making `balance <= owed` true and permanently locking such
+        // pre-funding transfers.
+        uint256 owed = funded ? totalAllocation - claimed : 0;
         uint256 balance = token.balanceOf(address(this));
         if (balance <= owed) revert NothingToSweep();
 

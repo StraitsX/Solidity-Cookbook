@@ -4,7 +4,6 @@ pragma solidity 0.8.36;
 import {Script, console} from "forge-std/Script.sol";
 import {VestingVault} from "../src/VestingVault.sol";
 import {MockERC20} from "../test/mocks/MockERC20.sol";
-import {MockERC20Foreign} from "../test/mocks/MockERC20Foreign.sol";
 
 /// @notice Local demonstration script: deploys a vesting vault, funds it, advances time via
 ///         `vm.warp`, claims in two stages, and demonstrates the sweep recovery path.
@@ -76,7 +75,7 @@ contract DeployAndDemo is Script {
 
         // --- Sweep demonstration: a stray foreign-token transfer, recovered by the funder ---
         vm.startBroadcast(deployerKey);
-        MockERC20Foreign strayToken = new MockERC20Foreign("Stray", "STRY");
+        MockERC20 strayToken = new MockERC20("Stray", "STRY");
         uint256 strayAmount = 123e18;
         strayToken.mint(address(vault), strayAmount);
         console.log("Simulated stray foreign-token transfer to vault:", strayAmount);

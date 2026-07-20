@@ -58,9 +58,11 @@ Open `http://localhost:5100` in your browser.
 **Terminal 3 — Run the demo**
 
 ```bash
-cd /Users/tim/straitsX/projects/vesting-vault
-./step-by-step-demo.sh
+cd <project-root>/Vesting-vault
+DEPLOYER_KEY=0x<account0_key> BENEFICIARY_KEY=0x<account1_key> ./step-by-step-demo.sh
 ```
+
+Copy the private keys from anvil's startup output (accounts #0 and #1).
 
 ---
 
@@ -456,7 +458,7 @@ This is one of the contract's most useful design features: **recovering another 
 # step-by-step-demo.sh:143-157
 
 # 12a. Deploy a stray token
-FOREIGN_ADDR=$(forge create test/mocks/MockERC20Foreign.sol:MockERC20Foreign ... | jq -r '.deployedTo')
+FOREIGN_ADDR=$(forge create test/mocks/MockERC20.sol:MockERC20 ... | jq -r '.deployedTo')
 
 # 12b. Mint 123 tokens to the vault (simulate an accidental transfer)
 cast send "$FOREIGN_ADDR" "mint(address,uint256)" "$VAULT_ADDR" "$STRAY_AMOUNT" \
@@ -573,8 +575,8 @@ The five successful transactions and two expected reverts together exercise and 
 **Anvil default accounts** (for testing only; never use these on a live network):
 
 ```
-#0 Address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-#0 Key:     0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efca784d7bf4f2ff80
-#1 Address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-#1 Key:     0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+#0 (deployer/funder): 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+#1 (beneficiary):     0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+
+Keys are printed by anvil on startup — copy them from the terminal output.
 ```

@@ -84,7 +84,7 @@ $ anvil
 ### Deploy
 
 ```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+$ forge script script/DeployAndDemo.s.sol:DeployAndDemo --rpc-url <your_rpc_url> --broadcast
 ```
 
 ### Cast
